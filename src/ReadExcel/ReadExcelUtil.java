@@ -63,9 +63,8 @@ public class ReadExcelUtil {
     public static void main(String[] args) {
         
         //Creo la interfaz gráfica
-        GeneratePanel panel = new GeneratePanel();
-        panel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        panel.setVisible(true);
+        GenerateFrame window = new GenerateFrame();
+        window.setVisible(true);
     
         File fileXls = new File("C:/Users/NieveFernandez/Documents/MACS_WHome/Prueba.xlsx");
         if (fileXls.exists()){
