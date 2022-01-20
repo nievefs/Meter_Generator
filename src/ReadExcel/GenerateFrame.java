@@ -1,15 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package ReadExcel;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -33,7 +24,10 @@ public class GenerateFrame extends JFrame{
         setSize(1500, 600);
         setLocationRelativeTo(null);  //colocar el panel en el centro de la pantalla 
         setTitle("Generate Meters"); 
-       
+        
+        Toolkit myScreen = Toolkit.getDefaultToolkit();
+        Image myLogo = myScreen.getImage("logo_meter.png");
+        setIconImage(myLogo);
         createPanel();
         
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -42,26 +36,29 @@ public class GenerateFrame extends JFrame{
     private void createPanel(){
         panel = new JPanel();
         //panel.setLayout(null);
-        //panel.setBackground(Color.GRAY); 
+        panel.setBackground(Color.decode("#FDC718")); 
         this.setLayout(new BorderLayout());
         
         this.getContentPane().add(panel);
             
         startComponents();
     }
-    
+
     private void startComponents(){
         
         labelLot = new JLabel("Lot: ", SwingConstants.CENTER);
         labelLot.setFont(new Font("arial", 1, 15));
         
         textLot = new JTextField(5);
+        textLot.setFont(new Font("arial", 1, 13));
         
         openButton = new JButton("Select File");
-        openButton.setFont(new Font("arial", 1, 15));
-        
+        openButton.setMargin(new Insets(0,0,0,0));
+        openButton.setFont(new Font("arial", 1, 12));
+              
         textArea = new JTextArea(120, 60);
         textArea.setMargin(new Insets(15,15,5,5));
+        textArea.setFont(new Font("arial", 1, 13));
         textArea.setEditable(false);
         JScrollPane logScrollPane = new JScrollPane(textArea);
              

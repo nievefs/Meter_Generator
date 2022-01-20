@@ -26,7 +26,6 @@ public class ReadExcel {
                          
         try {
             //Un FileInputStream obtiene bytes de entrada desde un archivo
-            //FileInputStream file = new FileInputStream(fileUrl);
             //XSSWorkbook permite la lectura de los ficheros xlsx
             
             XSSFWorkbook book = new XSSFWorkbook(new FileInputStream(fileXlsx));
@@ -68,79 +67,77 @@ public class ReadExcel {
             if (c == 0) {
                 int productCode = (int) columnData.getNumericCellValue();
                 meter.setProductCode(String.valueOf(productCode));
-                //System.out.print(meter.getProductCode() + " ");
             }
             if (c == 1) {
                 String productModel = columnData.toString();
                 meter.setProductModel(productModel);
                 meter.setAutoMeterTypeIdByProductModel(productModel);
-                               
-                //System.out.print(meter.getProductModel() + " ");
-                //System.out.print(meter.getMeterTypeId() + " ");
             }
             if (c == 2) {
                 String firmware = columnData.toString();
                 meter.setFirmware(firmware);
-                
-                //System.out.print(meter.getFirmware() + " ");
             }
             if (c == 5) {
                 DataFormatter dataFormatter = new DataFormatter();
                 String serialNumber = dataFormatter.formatCellValue(columnData);
                 meter.setSerialNumber(serialNumber);
-                
-                //System.out.print(meter.getSerialNumber() + " ");
             }
             if (c == 9) {
                 String mac = columnData.toString();
                 mac = mac.replace(":", "");
                 mac = mac.toUpperCase();
                 meter.setMac(mac);
-                
-                //System.out.print(meter.getMac() + " ");
             }
         }
         return meter;
 
     }
     
-    public String createQuerys(File file, String lot){
-    
-        String query = ""; 
-        
+    public String createQuerys(File file, String lot) {
+
+        String query = "";
+
         String newline = "\n";
         if (file.exists()) {
 
             //System.out.println(file.getAbsolutePath().contains(".xlsx"));
+            if (file.getAbsolutePath().contains(".xlsx")) {
 
-            ArrayList metersList = new ArrayList();
-            metersList = ReadExcel(file);
+                if (!lot.isEmpty()) {
+                    ArrayList metersList = new ArrayList();
+                    metersList = ReadExcel(file);
 
-            if (!metersList.isEmpty()) {
+                    if (!metersList.isEmpty()) {
 
-                //Recorremos la colección de row para guardar los datos de product, mac, fw, SN y description
-                for (int r = 1; r < metersList.size(); r++) {
-                    List rowData = (List) metersList.get(r);
-                    //System.out.println(cellData.size());
-                    
-                    Meter meter = createMeter(rowData);
-                    
-                     query += "INSERT INTO meter (sid,meter_type_id,lot_id,firmware,product_code, serial_number, meter_type_code_id) "
-                            + "values('@sid','@meter_type_id','@lot_id','@firmware','@product_code', '@serial_number', '@product_model');" + newline;
-                      
-                        query = query.replace("@sid", meter.getMac());
-                        query = query.replace("@meter_type_id", meter.getMeterTypeId());
-                        query = query.replace("@lot_id", lot);
-                        query = query.replace("@firmware", meter.getFirmware());
-                        query = query.replace("@product_code", meter.getProductCode());
-                        query = query.replace("@serial_number", meter.getSerialNumber());
-                        query = query.replace("@product_model", meter.getProductModel());  
-                                           
-                } 
+                        //Recorremos la colección de row para guardar los datos de product, mac, fw, SN y description
+                        for (int r = 1; r < metersList.size(); r++) {
+                            List rowData = (List) metersList.get(r);
+                            //System.out.println(cellData.size());
+
+                            Meter meter = createMeter(rowData);
+
+                            query += "INSERT INTO meter (sid,meter_type_id,lot_id,firmware,product_code, serial_number, meter_type_code_id) "
+                                    + "values('@sid','@meter_type_id','@lot_id','@firmware','@product_code', '@serial_number', '@product_model');" + newline;
+
+                            query = query.replace("@sid", meter.getMac());
+                            query = query.replace("@meter_type_id", meter.getMeterTypeId());
+                            query = query.replace("@lot_id", lot);
+                            query = query.replace("@firmware", meter.getFirmware());
+                            query = query.replace("@product_code", meter.getProductCode());
+                            query = query.replace("@serial_number", meter.getSerialNumber());
+                            query = query.replace("@product_model", meter.getProductModel());
+
+                        }
+                    }
+                }else{
+                    System.out.println("****INGRESE UN NUMERO DE LOTE*****");
+                }
+
+            } else {
+                System.out.println("****EL FICHERO NO ES FORMATO .xlsx****");
             }
         }
-        
-        //System.out.print(query);   
+
         return query;
     }
 
